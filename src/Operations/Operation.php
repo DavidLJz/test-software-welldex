@@ -11,10 +11,16 @@ abstract class Operation
 	protected $aduana, $patente, $tipo_mercancia, $tipo_operacion, $status;
 	protected $carga = [];
 	
-	function __construct(string $tipo_mercancia, string $status)
+	function __construct(string $tipo_mercancia, array $mercancias, string $status)
 	{
 		$this->status = $status;
 		$this->tipo_mercancia = $tipo_mercancia;
+
+		if ( empty($mercancias) && $tipo_mercancia === 'contenerizada' ) {
+			throw new \Exception('La operación no puede ser creada sin contenedores');
+		}
+
+		$this->procesarMercancias($mercancias);
 	}
 
 	// setter global
@@ -41,14 +47,40 @@ abstract class Operation
 	protected function getDateTimeObj(int $timestamp) :\DateTime
 	{
 		$dateTime = new \DateTime('@' . $timestamp);
+		$dateTime->setTimezone('America/Mexico_City');
 
 		return $dateTime;
 	}
 
-	protected function createContainer(array $params) :Container
+	protected function procesarMercancias(array $mercancias) :void
 	{
-		extract($params);
+		foreach ($mercancias as $m) {
+			if ( $this->tipo_mercancia === 'contenerizada' ) {
+				if ( empty((int) $m['time']) ) {
+					continue;
+				}
+						
+				$time = $this->getDateTimeObj((int) $m['time']);
 
-		return new Container($folio, $tipo, $dimensiones, $fecha_descargo);
+				$container = new Container(
+					$m['folio'], $m['tipo'], $m['dimensiones'], $time
+				);
+
+				$this->carga[] = $container;
+			}
+
+			// Si es carga suelta, la descripción de la carga y la cantidad de la misma
+			elseif ( $this->tipo_mercancia === 'carga_suelta' ) {
+				$this->carga[] = [
+					'cantidad' => $m['cantidad'] ?? 1,
+					'descripcion' => $m['descripcion']
+				];
+			}
+		}
+
+		// la operación no puede ser creada sin contenedores
+		if ( empty($this->mercancias) ) {
+			throw new \Exception('Esta operación no tiene carga/contenedores');
+		}
 	}
 }
