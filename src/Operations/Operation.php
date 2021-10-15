@@ -22,7 +22,7 @@ abstract class Operation
 			throw new \Exception('La operación no puede ser creada sin contenedores');
 		}
 
-		$this->procesarMercancias($mercancias);
+		$this->registrarMercancias($mercancias);
 	}
 
 	// setter global
@@ -54,7 +54,7 @@ abstract class Operation
 		return $dateTime;
 	}
 
-	protected function procesarMercancias(array $mercancias) :void
+	protected function registrarMercancias(array $mercancias) :void
 	{
 		foreach ($mercancias as $m) {
 			if ( $this->tipo_mercancia === 'contenerizada' ) {
