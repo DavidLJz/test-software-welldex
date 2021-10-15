@@ -17,4 +17,13 @@ class Container
 		$this->dimensiones = $dimensiones;
 		$this->fecha_descargo = $fecha_descargo;
 	}
+
+	function __get(string $name)
+	{
+		if ( !property_exists($this, $name) ) {
+			throw new \InvalidArgumentException("Propiedad con nombre {$name} no existe");
+		}
+
+		return $this->{$name};
+	}
 }
