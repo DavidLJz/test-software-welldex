@@ -10,21 +10,21 @@ use Traits\DateHandling;
  */
 class Container
 {
-	protected $folio, $tipo, $dimensiones, $fecha_descargo;
+	protected $container_id, $tipo, $dimensiones, $fecha_descargo;
 
 	use DateHandling;
 	
 	function __construct(
-		string $folio, string $tipo, array $dimensiones, ?DateTime $fecha_descargo=null
+		string $container_id, string $tipo, array $dimensiones, ?DateTime $fecha_descargo=null
 	)
 	{
-		if ( !preg_match('/^[\da-z]{5,}$/i', $folio) ) {
+		if ( !preg_match('/^[\da-z]{5,}$/i', $container_id) ) {
 			throw new \InvalidArgumentException(
-				'El folio debe ser un string alfanumerico'
+				'El container_id debe ser un string alfanumerico'
 			);
 		}
 
-		$this->folio = strtolower($folio);
+		$this->container_id = strtolower($container_id);
 
 		$this->tipo = $tipo;
 		$this->dimensiones = $dimensiones;

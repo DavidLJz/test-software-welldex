@@ -60,7 +60,7 @@ abstract class Operation
 				$time = $this->createDateTime($m['fecha_descargo']);
 
 				$container = new Container(
-					$m['folio'], $m['tipo'], $m['dimensiones'], $time
+					$m['container_id'], $m['tipo'], $m['dimensiones'], $time
 				);
 
 				$this->carga[] = $container;
