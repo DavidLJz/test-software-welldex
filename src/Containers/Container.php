@@ -2,14 +2,20 @@
 
 namespace Containers;
 
+use DateTime;
+use Traits\DateHandling;
+
 /**
  * 
  */
 class Container
 {
+	protected $folio, $tipo, $dimensiones, $fecha_descargo;
+
+	use DateHandling;
 	
 	function __construct(
-		string $folio, string $tipo, array $dimensiones, \DateTime $fecha_descargo
+		string $folio, string $tipo, array $dimensiones, ?DateTime $fecha_descargo=null
 	)
 	{
 		if ( !preg_match('/^[\da-z]{5,}$/i', $folio) ) {
@@ -23,6 +29,15 @@ class Container
 		$this->tipo = $tipo;
 		$this->dimensiones = $dimensiones;
 		$this->fecha_descargo = $fecha_descargo;
+	}
+
+	public function actualizarFechaDescarga($time) :self
+	{
+		$time = $this->createDateTime($time);
+
+		$this->fecha_descargo = $time;
+
+		return $this;
 	}
 
 	function __get(string $name)
