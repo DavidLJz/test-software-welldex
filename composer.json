@@ -8,7 +8,8 @@
   "autoload": {
     "psr-4": {
       "Operations\\": "src/Operations/",
-      "Containers\\": "src/Containers/"
+      "Containers\\": "src/Containers/",
+      "Traits\\": "src/Traits/"
     }
   }
 }

@@ -15,13 +15,7 @@ class Export extends Operation
 	{
 		parent::__construct($tipo_mercancia, $mercancias, $status);
 
-		if ( !$time instanceof \DateTime ) {
-			if ( empty((int) $time) ) {
-				throw new \InvalidArgumentException('Parametro time debe ser DateTime o timestamp');
-			}
-				
-			$time = $this->getDateTimeObj((int) $time);
-		}
+		$time = $this->createDateTime($time);
 
 		$this->fecha_zarpe = $time;
 		$this->pais_destino = $pais;
@@ -29,17 +23,11 @@ class Export extends Operation
 
 	public function actualizarFechaZarpe($time) :self
 	{
-		if ( !$time instanceof \DateTime ) {
-			if ( empty((int) $time) ) {
-				throw new \InvalidArgumentException('Parametro time debe ser DateTime o timestamp');
-			}
-
-			$eta = $this->getDateTimeObj((int) $time);
-		}
+		$eta = $this->createDateTime($time);
 
 		$this->fecha_zarpe = $eta;
 
-		$d = (new \DateTime('@' . time()))->setTimezone(new \DateTimeZone('America/Mexico_City'));
+		$d = $this->createDateTime();
 
 		if ( $eta->getTimestamp() > $d->getTimestamp() ) {
 			$this->status = 'ETD';

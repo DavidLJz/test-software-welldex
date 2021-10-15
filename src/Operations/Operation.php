@@ -3,12 +3,15 @@
 namespace Operations;
 
 use Containers\Container;
+use Traits\DateHandling;
 
 /**
  * 
  */
 abstract class Operation
 {
+	use DateHandling;
+
 	protected $referencia, $pedimento, $cliente;
 	protected $aduana, $patente, $tipo_mercancia, $tipo_operacion, $status;
 	protected $carga = [];
@@ -46,14 +49,6 @@ abstract class Operation
 		return $this->{$name};
 	}
 
-	protected function getDateTimeObj(int $timestamp) :\DateTime
-	{
-		$dateTime = new \DateTime('@' . $timestamp);
-		$dateTime->setTimezone(new \DateTimeZone('America/Mexico_City'));
-
-		return $dateTime;
-	}
-
 	protected function registrarMercancias(array $mercancias) :void
 	{
 		foreach ($mercancias as $m) {
@@ -62,7 +57,7 @@ abstract class Operation
 					continue;
 				}
 						
-				$time = $this->getDateTimeObj((int) $m['fecha_descargo']);
+				$time = $this->createDateTime($m['fecha_descargo']);
 
 				$container = new Container(
 					$m['folio'], $m['tipo'], $m['dimensiones'], $time
