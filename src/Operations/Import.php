@@ -1,5 +1,7 @@
 <?php
 
+namespace Operations;
+
 /**
  * 
  */
@@ -11,12 +13,12 @@ class Import extends Operation
 	{
 		parent::__construct($tipo_mercancia, $status);
 
-		if ( !$time instanceof DateTime ) {
-			if ( !empty((int) $time) ) {
-				$time = $this->getDateTimeObj((int) $time, $pais);
+		if ( !$time instanceof \DateTime ) {
+			if ( empty((int) $time) ) {
+				throw new \InvalidArgumentException('Parametro time debe ser DateTime o timestamp');
 			}
 
-			throw new InvalidArgumentException('Parametro time debe ser DateTime o timestamp');
+			$time = $this->getDateTimeObj((int) $time, $pais);
 		}
 
 		$this->fecha_origen = $time;
@@ -24,12 +26,6 @@ class Import extends Operation
 
 		if ( $tipo_mercancia === 'contenerizada' ) {
 			$this->carga[] = $this->createContainer([]);
-		}
-
-		else {
-			$this->carga = [
-				
-			];
 		}
 	}
 }

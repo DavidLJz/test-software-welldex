@@ -1,5 +1,7 @@
 <?php
 
+namespace Operations;
+
 /**
  * 
  */
@@ -7,7 +9,7 @@ class Container
 {
 	
 	function __construct(
-		string $folio, string $tipo, array $dimensiones, DateTime $fecha_descargo
+		string $folio, string $tipo, array $dimensiones, \DateTime $fecha_descargo
 	)
 	{
 		$this->folio = $folio;
