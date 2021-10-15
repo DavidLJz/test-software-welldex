@@ -10,7 +10,7 @@ use Traits\DateHandling;
  */
 class Container
 {
-	protected $container_id, $tipo, $dimensiones, $fecha_descargo;
+	protected $container_id, $tipo, $dimensiones, $fecha_descargo, $status;
 
 	use DateHandling;
 	
@@ -29,13 +29,24 @@ class Container
 		$this->tipo = $tipo;
 		$this->dimensiones = $dimensiones;
 		$this->fecha_descargo = $fecha_descargo;
+
+		$this->status = 'En transporte';
 	}
 
-	public function actualizarFechaDescarga($time) :self
+	public function actualizarFechaDescarga($time=null) :self
 	{
 		$time = $this->createDateTime($time);
 
 		$this->fecha_descargo = $time;
+
+		return $this;
+	}
+
+	public function registrarDescarga() :self
+	{
+		$this->actualizarFechaDescarga();
+
+		$this->status = 'Descargado';
 
 		return $this;
 	}
