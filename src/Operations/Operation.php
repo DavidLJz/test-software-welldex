@@ -2,6 +2,8 @@
 
 namespace Operations;
 
+use Containers\Container;
+
 /**
  * 
  */
@@ -47,7 +49,7 @@ abstract class Operation
 	protected function getDateTimeObj(int $timestamp) :\DateTime
 	{
 		$dateTime = new \DateTime('@' . $timestamp);
-		$dateTime->setTimezone('America/Mexico_City');
+		$dateTime->setTimezone(new \DateTimeZone('America/Mexico_City'));
 
 		return $dateTime;
 	}
@@ -56,11 +58,11 @@ abstract class Operation
 	{
 		foreach ($mercancias as $m) {
 			if ( $this->tipo_mercancia === 'contenerizada' ) {
-				if ( empty((int) $m['time']) ) {
+				if ( empty((int) $m['fecha_descargo']) ) {
 					continue;
 				}
 						
-				$time = $this->getDateTimeObj((int) $m['time']);
+				$time = $this->getDateTimeObj((int) $m['fecha_descargo']);
 
 				$container = new Container(
 					$m['folio'], $m['tipo'], $m['dimensiones'], $time
@@ -79,7 +81,7 @@ abstract class Operation
 		}
 
 		// la operación no puede ser creada sin contenedores
-		if ( empty($this->mercancias) ) {
+		if ( empty($this->carga) ) {
 			throw new \Exception('Esta operación no tiene carga/contenedores');
 		}
 	}
