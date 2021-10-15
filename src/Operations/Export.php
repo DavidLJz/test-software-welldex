@@ -15,10 +15,14 @@ class Export extends Operation
 	{
 		parent::__construct($tipo_mercancia, $mercancias, $status);
 
-		$time = $this->createDateTime($time);
+		if ( empty($time) ) {
+			throw new \InvalidArgumentException('Debe proporcionar parametro time');
+		}
 
-		$this->fecha_zarpe = $time;
+		$this->fecha_zarpe = $this->createDateTime($time);
 		$this->pais_destino = $pais;
+
+		$this->tipo_operacion = 'Exportación';
 	}
 
 	public function actualizarFechaZarpe($time) :self

@@ -26,6 +26,8 @@ abstract class Operation
 		}
 
 		$this->registrarMercancias($mercancias);
+
+		$this->referencia = uniqid();
 	}
 
 	// setter global
@@ -53,10 +55,10 @@ abstract class Operation
 	{
 		foreach ($mercancias as $m) {
 			if ( $this->tipo_mercancia === 'contenerizada' ) {
-				if ( empty((int) $m['fecha_descargo']) ) {
+				if ( empty($m['fecha_descargo']) ) {
 					continue;
 				}
-						
+
 				$time = $this->createDateTime($m['fecha_descargo']);
 
 				$container = new Container(

@@ -15,10 +15,14 @@ class Import extends Operation
 	{
 		parent::__construct($tipo_mercancia, $mercancias, $status);
 
-		$time = $this->createDateTime($time);
+		if ( empty($time) ) {
+			throw new \InvalidArgumentException('Debe proporcionar parametro time');
+		}
 
-		$this->fecha_arribo = $time;
+		$this->fecha_arribo = $this->createDateTime($time);
 		$this->pais_origen = $pais;
+
+		$this->tipo_operacion = 'Importación';
 	}
 
 	public function actualizarFechaArribo($time) :self
