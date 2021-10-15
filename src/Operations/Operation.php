@@ -29,14 +29,13 @@ abstract class Operation
 		return $this;
 	}
 
-	// getter global
-	public function get(string $key)
+	function __get(string $name)
 	{
-		if ( !property_exists($this, $key) ) {
-			throw new \InvalidArgumentException("Propiedad con nombre {$key} no existe");
+		if ( !property_exists($this, $name) ) {
+			throw new \InvalidArgumentException("Propiedad con nombre {$name} no existe");
 		}
 
-		return $this->{$key};
+		return $this->{$name};
 	}
 
 	protected function getDateTimeObj(int $timestamp) :\DateTime
