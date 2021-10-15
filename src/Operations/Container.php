@@ -12,7 +12,14 @@ class Container
 		string $folio, string $tipo, array $dimensiones, \DateTime $fecha_descargo
 	)
 	{
-		$this->folio = $folio;
+		if ( !preg_match('/^[\da-z]{5,}$/i', $folio) ) {
+			throw new \InvalidArgumentException(
+				'El folio debe ser un string alfanumerico'
+			);
+		}
+
+		$this->folio = strtolower($folio);
+
 		$this->tipo = $tipo;
 		$this->dimensiones = $dimensiones;
 		$this->fecha_descargo = $fecha_descargo;
