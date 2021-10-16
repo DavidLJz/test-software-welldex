@@ -30,7 +30,9 @@ trait DateHandling
 			$d = DateTime::createFromFormat('Y-m-d H:i', $time);
 
 			if ( !$d ) {
-				throw new \Exception('No se pudó convertir string a DateTime');
+				throw new \Exception(
+					'La fecha debe seguir el siguiente formato: Y-m-d H:i'
+				);
 			}
 
 			return $d;
@@ -38,9 +40,7 @@ trait DateHandling
 
 		else {
 			if ( empty((int) $time) ) {
-				throw new \InvalidArgumentException(
-					'Parametro time debe ser DateTime, string o timestamp'
-				);
+				throw new \InvalidArgumentException('Parametro debe ser string o timestamp');
 			}
 
 			return $this->getDateTimeFromTimestamp($time);
