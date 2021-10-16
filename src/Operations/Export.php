@@ -39,4 +39,10 @@ class Export extends Operation
 
 		return $this;
 	}
+
+	public function actualizarDestino($value) :self
+	{
+		$this->pais_origen = $value;
+		return $this;
+	}
 }

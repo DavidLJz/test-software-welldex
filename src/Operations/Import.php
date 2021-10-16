@@ -39,4 +39,10 @@ class Import extends Operation
 
 		return $this;
 	}
+
+	public function actualizarPaisOrigen($value) :self
+	{
+		$this->pais_origen = $value;
+		return $this;
+	}
 }

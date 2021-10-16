@@ -30,15 +30,45 @@ abstract class Operation
 		$this->referencia = uniqid();
 	}
 
-	// setter global
-	public function set(string $key, $val) :self
+	public function actualizarReferencia(string $value) :self
 	{
-		if ( !property_exists($this, $key) ) {
-			throw new \InvalidArgumentException("Propiedad con nombre {$key} no existe");
-		}
+		$this->referencia = $value;
+		return $this;
+	}
 
-		$this->{$key} = $val;
+	public function actualizarPedimento($value) :self
+	{
+		$this->pedimento = $value;
+		return $this;
+	}
 
+	public function actualizarAduana($value) :self
+	{
+		$this->aduana = $value;
+		return $this;
+	}
+
+	public function actualizarCliente($value) :self
+	{
+		$this->cliente = $value;
+		return $this;
+	}
+
+	public function actualizarPatente($value) :self
+	{
+		$this->patente = $value;
+		return $this;
+	}
+
+	protected function actualizarTipoMercancia(string $value) :self
+	{
+		$this->tipo_mercancia = $value;
+		return $this;
+	}
+
+	protected function actualizarStatus(string $value) :self
+	{
+		$this->tipo_operacion = $value;
 		return $this;
 	}
 
@@ -70,7 +100,7 @@ abstract class Operation
 
 			// Si es carga suelta, la descripción de la carga y la cantidad de la misma
 			elseif ( $this->tipo_mercancia === 'carga_suelta' ) {
-				$this->carga[] = [
+				$this->carga = [
 					'cantidad' => $m['cantidad'] ?? 1,
 					'descripcion' => $m['descripcion']
 				];
@@ -81,5 +111,54 @@ abstract class Operation
 		if ( empty($this->carga) ) {
 			throw new \Exception('Esta operación no tiene carga/contenedores');
 		}
+	}
+
+	protected function getContainer(string $container_id) :?Container
+	{
+		foreach ($this->carga as $container) {
+			if ( empty($container['container_id']) ) continue;
+
+			if ( $container['container_id'] !== $container_id ) continue;
+
+			return $container;
+		}
+
+		return null;
+	}
+
+	protected function contabilizarDescargas() :int
+	{
+		$x = 0;
+
+		foreach ($this->carga as $container) {
+			if ( $container->status === 'Descargado' ) {
+				$x++;
+			}
+		}
+
+		return $x;
+	}
+
+	public function registrarDescarga(string $container_id, $time=null) :self
+	{
+		$time = $this->createDateTime($time);
+
+		if ( $this->tipo_mercancia === 'contenerizada' ) {
+			$container = $this->getContainer($container_id);
+
+			$container->registrarDescarga();
+		}
+
+		elseif ( $this->tipo_mercancia === 'carga_suelta' ) {
+			
+		}
+
+		$descargas = $this->contabilizarDescargas();
+
+		if ( count($this->carga) == $descargas ) {
+			$this->status = 'Descargo';
+		}
+
+		return $this;
 	}
 }
