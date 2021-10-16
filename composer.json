@@ -9,7 +9,8 @@
     "psr-4": {
       "Operations\\": "src/Operations/",
       "Containers\\": "src/Containers/",
-      "Traits\\": "src/Traits/"
+      "Traits\\": "src/Traits/",
+      "Ejemplos\\": "src/Ejemplos/"
     }
   }
 }
