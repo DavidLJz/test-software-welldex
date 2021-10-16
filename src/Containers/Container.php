@@ -24,7 +24,7 @@ class Container
 			);
 		}
 
-		$this->container_id = strtolower($container_id);
+		$this->container_id = $container_id;
 
 		$this->tipo = $tipo;
 		$this->dimensiones = $dimensiones;
@@ -49,6 +49,13 @@ class Container
 		$this->status = 'Descargado';
 
 		return $this;
+	}
+
+	public function dimensionesString() :string
+	{
+		$x = $this->dimensiones;
+
+		return "{$x['largo']} x {$x['ancho']} x {$x['alto']} {$x['unidad']}";
 	}
 
 	function __get(string $name)

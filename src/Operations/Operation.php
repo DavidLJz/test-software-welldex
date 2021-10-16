@@ -116,11 +116,9 @@ abstract class Operation
 	protected function getContainer(string $container_id) :?Container
 	{
 		foreach ($this->carga as $container) {
-			if ( empty($container['container_id']) ) continue;
-
-			if ( $container['container_id'] !== $container_id ) continue;
-
-			return $container;
+			if ( $container->container_id == $container_id ) {
+				return $container;
+			}
 		}
 
 		return null;
@@ -130,34 +128,51 @@ abstract class Operation
 	{
 		$x = 0;
 
-		foreach ($this->carga as $container) {
-			if ( $container->status === 'Descargado' ) {
-				$x++;
+		if ( $this->tipo_mercancia === 'contenerizada' ) {
+			foreach ($this->carga as $container) {
+				if ( $container->status == 'Descargado' ) {
+					$x++;
+				}
+			}
+
+			if ( count($this->carga) == $x )  {
+				$this->status = 'Descargo';
+			}
+
+		} else {
+			if ($this->carga['cantidad'] == 0) {
+				$this->status = 'Descargo';
 			}
 		}
 
 		return $x;
 	}
 
-	public function registrarDescarga(string $container_id, $time=null) :self
+	public function registrarDescarga(int $amount=1, ?string $container_id=null, $time=null) :self
 	{
 		$time = $this->createDateTime($time);
 
 		if ( $this->tipo_mercancia === 'contenerizada' ) {
+			if ( empty($container_id) ) {
+				throw new \Exception('Debe proporcionar el id del contenedor');
+			}
+
 			$container = $this->getContainer($container_id);
+
+			if ( empty($container) ) {
+				throw new \Exception('No existe contenedor con id: ' . $container_id);
+			}
 
 			$container->registrarDescarga();
 		}
 
 		elseif ( $this->tipo_mercancia === 'carga_suelta' ) {
-			
+			if ( $this->carga['cantidad'] > 0 )	{
+				$this->carga['cantidad'] -= $amount;
+			}
 		}
 
-		$descargas = $this->contabilizarDescargas();
-
-		if ( count($this->carga) == $descargas ) {
-			$this->status = 'Descargo';
-		}
+		$this->contabilizarDescargas();
 
 		return $this;
 	}
